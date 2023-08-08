@@ -9,6 +9,8 @@ RIS/static/temps/
 RIS/cbir_feature/**
 !RIS/cbir_feature/.gitkepp
 
+/RIS/__init__.py
+
 # C extensions
 *.so
 
