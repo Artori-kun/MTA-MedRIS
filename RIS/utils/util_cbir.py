@@ -10,8 +10,8 @@ import cv2 as cv
 import operator
 import io
 
-orthanc = Orthanc('http://localhost:8042')
-# orthanc.setup_credentials('salim', 'salim')
+orthanc = Orthanc('http://172.19.0.2:8042')
+orthanc.setup_credentials('salim', 'salim')
 
 # orthanc.setup_credentials(os.environ.get('ORTHANC_USERNAME'), os.environ.get('ORTHANC_PWD'))
 
