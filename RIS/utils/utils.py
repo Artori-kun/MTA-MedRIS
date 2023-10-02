@@ -72,8 +72,8 @@ def convert_dcm_jpg(path, name):
     # return final_image
     
 def import_dcm(dcm_path):
-    orthanc = Orthanc('http://localhost:8042')
-    # orthanc.setup_credentials('salim', 'salim')  # If needed
+    orthanc = Orthanc('http://orthanc:8042')
+    orthanc.setup_credentials('salim', 'salim')  # If needed
     
     # orthanc.setup_credentials(os.environ.get('ORTHANC_USERNAME'),
     #                           os.environ.get('ORTHANC_PWD'))
