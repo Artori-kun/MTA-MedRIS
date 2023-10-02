@@ -316,9 +316,9 @@ def add_scan():
                     try:
                         series_uid, profile_image = utils.save_picture(form.dicom_series.data)
                     except Exception as e:
-                        if type(e) is ValueError:
-                            flash("The dicom files you have chosen do not belong to a single dicom series", 'danger')
-                            return redirect(url_for('add_scan'))
+                        print(e)
+                        flash("Adding scan not succeed", 'danger')
+                        return redirect(url_for('add_scan'))
                 
                 scan.patient_name = form.patient_name.data
                 scan.patient_ssn = form.patient_ssn.data

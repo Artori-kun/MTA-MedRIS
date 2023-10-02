@@ -158,7 +158,7 @@ class AddScanForm(FlaskForm):
     # technician_ssn = SelectField("Technician SSN", choices=[], validators=[DataRequired() , Length (min=3, max=100)])
     # doctor_ssn = SelectField("Doctor SSN", choices=[], validators=[DataRequired(), Length (min=3 , max=100 )])
     
-    dicom_series = MultipleFileField('Choose Scan to Upload', validators=[FileAllowed(['dcm'])])
+    dicom_series = MultipleFileField('Choose Scan to Upload')
     
     submit = SubmitField("Submit")
     
