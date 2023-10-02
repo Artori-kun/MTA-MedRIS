@@ -317,9 +317,10 @@ def add_scan():
                     try:
                         series_uid, profile_image = utils.save_picture(form.dicom_series.data)
                     except Exception as e:
+                        print(str(e))
                         log_path = os.path.join(app.root_path, 'log.txt')
                         with open(log_path, 'a') as fw:
-                            fw.write(e+"\n")
+                            fw.write(str(e)+"\n")
 
                         flash("Adding scan not succeed", 'danger')
                         return redirect(url_for('add_scan'))
