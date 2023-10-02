@@ -82,7 +82,7 @@ def save_instance_image(path, sop_instance_id):
     if instance_id == '':
         return 404
     
-    instance_img = orthanc.get_instances_id_image_int16(instance_id)
+    instance_img = orthanc.get_instances_id_image_uint8(instance_id)
     instance_img = Image.open(io.BytesIO(instance_img))
     instance_img = instance_img.save(path)
 
@@ -122,6 +122,8 @@ def extract_feat(config, model, img):
 
 def retrieve(feat, series_id, threshold=0.8):
     similarities = {}
+
+    print("START SEARCHING")
     
     for root, studies, series in os.walk(CBIR_ROOT):
         for serie in series:
@@ -134,12 +136,14 @@ def retrieve(feat, series_id, threshold=0.8):
                 ## using cosine similarity to compare
                 n = len(npz_data['ID'])
                 for i in range(n):
+                    print(f"Calculating feature cosine similarity with instance:\t{npz_data['ID'][i]}")
                     cos_sim = cos_similarity(npz_data['FEATURE'][i], feat)
                     if cos_sim >= threshold:
                         cos_sim = np.float64(cos_sim)
                         cos_sim = "{:.3f}".format(cos_sim)
                         similarities[npz_data['ID'][i]] = cos_sim
     similarities = dict(sorted(similarities.items(), key=operator.itemgetter(1), reverse=True))
+    print("SEARCH COMPLETE")
     return similarities
 
 def cbir_search(sop_instance_id, x0, y0, x1, y1):
