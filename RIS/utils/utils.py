@@ -191,7 +191,7 @@ def extract_series_uid(dicom_path):
         #     if series_uid != str(dicom.SeriesInstanceUID):
         #         series_uid = str(dicom.SeriesInstanceUID)
         #         counter = counter + 1
-    if counter == 1:
+    if counter != 0:
         return series_uid, profile_instance_uid
     else:
         raise ValueError("Not a series or incorrect dicom format!!")
