@@ -202,7 +202,7 @@ class UpdateScanForm(FlaskForm):
         validators=[InputRequired()],
         coerce=bool)
     
-    dicom_series = MultipleFileField('Choose Scan to Upload', validators=[FileAllowed(['dcm'])])
+    dicom_series = MultipleFileField('Choose Scan to Upload')
     
     submit = SubmitField("Update")
     
