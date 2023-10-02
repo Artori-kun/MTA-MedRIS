@@ -298,3 +298,7 @@ class UpdateTechnician(FlaskForm):
     #     email = Technician.query.filter_by(email = email.data, active=True).first()
     #     if  email and email is not self.current:
     #         raise ValidationError("This Email already exists. try a different one")
+
+class CbirSearchForm(FlaskForm):
+    search = StringField('Input Instance UID', validators=[DataRequired()])
+    submit = SubmitField('Search')

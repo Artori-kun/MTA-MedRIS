@@ -9,6 +9,7 @@ import torch
 import cv2 as cv
 import operator
 import io
+import shutil
 
 orthanc = Orthanc('http://orthanc:8042')
 orthanc.setup_credentials('salim', 'salim')
@@ -22,7 +23,7 @@ def get_pretrained_model(config):
 
     model = build_model(config)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    model.to(device)
+    model = model.to(device)
 
     print(
         f"==============> Resuming form {config.MODEL.RESUME}....................")
@@ -66,6 +67,25 @@ def get_instance_image(sop_instance_id):
     
     return instance_img, instance_id
 
+def save_instance_image(path, sop_instance_id):
+    instance_id = ''
+    instance_lookup = orthanc.post_tools_lookup(sop_instance_id)
+    
+    try:
+        for i in instance_lookup:
+            if i["Type"] == "Instance":
+                instance_id = i["ID"]
+    except Exception as e:
+        print(e)
+        return 500    
+    # instance not found        
+    if instance_id == '':
+        return 404
+    
+    instance_img = orthanc.get_instances_id_image_uint8(instance_id)
+    instance_img = Image.open(io.BytesIO(instance_img))
+    instance_img = instance_img.save(path)
+
 def cos_similarity(x, y):
     similarity = np.dot(x, y.T) / (np.linalg.norm(x) * np.linalg.norm(y))
     return similarity.flatten()[0]
@@ -74,7 +94,7 @@ def extract_feat(config, model, img):
     """
     Extract feature of input image by `model`.
     """
-    device = torch.device("cpu")
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # print(f"Resizing...{img.shape}")
     img = cv.resize(img, (config.DATA.IMG_SIZE, config.DATA.IMG_SIZE))
@@ -92,20 +112,20 @@ def extract_feat(config, model, img):
     # print("torch")
     img = torch.from_numpy(img)
     # print(img)
-    img.to(device)
+    img = img.to(device)
 
     with torch.no_grad():
-        # print("model")
+        print("model")
         output = model(img)
     # feat = output.cpu().numpy()
     return output
 
-def retrieve(feat, series_id, threshold=0.85):
+def retrieve(feat, series_id, threshold=0.8):
     similarities = {}
     
     for root, studies, series in os.walk(CBIR_ROOT):
         for serie in series:
-            if serie.endswith(".npz") and serie.replace(".npz",  "") is not series_id:
+            if serie.endswith(".npz") and serie.replace(".npz",  "") != series_id:
                 serie_path = os.path.join(root, serie)
                 
                 # read series npz file
@@ -180,11 +200,11 @@ def register_img(series_uid):
             # print(f"Extracting {instance_img.shape}")
             # instance_img = instance_img.reshape(instance_img.shape[0], instance_img.shape[1], 1)
             instance_feature = extract_feat(CONFIG, MODEL, instance_img)
-            # print("extracted")
+            print("extracted")
             
             feature.append(instance_feature)
             id.append(instance["MainDicomTags"]["SOPInstanceUID"])
-            # print("appended")
+            print("appended")
     except Exception as e:
         print(e)
         # print(instance["ID"])
@@ -200,3 +220,14 @@ def register_img(series_uid):
     print(f"\tSaved at {npz_path}")
         
     
+def delete_files_and_subdirectories(directory_path):
+   try:
+     with os.scandir(directory_path) as entries:
+       for entry in entries:
+         if entry.is_file():
+            os.unlink(entry.path)
+         else:
+            shutil.rmtree(entry.path)
+     print("All files and subdirectories deleted successfully.")
+   except OSError:
+     print("Error occurred while deleting files and subdirectories.")

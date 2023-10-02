@@ -3,9 +3,9 @@ from pyorthanc import Orthanc
 from RIS.utils import util_cbir
 
 orthanc = Orthanc('http://orthanc:8042')
-orthanc.setup_credentials('salim', 'salim')
+# orthanc.setup_credentials('salim', 'salim')
 
-# orthanc.setup_credentials(os.environ.get('ORTHANC_USERNAME'), os.environ.get('ORTHANC_PWD'))
+orthanc.setup_credentials(os.environ.get('ORTHANC_USERNAME'), os.environ.get('ORTHANC_PWD'))
 
 all_series = orthanc.get_series()
 for series in all_series:
