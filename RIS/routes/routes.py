@@ -6,6 +6,7 @@ from RIS.models import Technician, User, Scan
 from flask_login import login_user, current_user, logout_user, login_required
 import hashlib
 import csv
+import os
 
 
 import RIS.utils.utils as utils
@@ -316,7 +317,10 @@ def add_scan():
                     try:
                         series_uid, profile_image = utils.save_picture(form.dicom_series.data)
                     except Exception as e:
-                        print(e)
+                        log_path = os.path.join(app.root_path, 'RIS/log.txt')
+                        with open(log_path, 'a') as fw:
+                            fw.write(e+"\n")
+
                         flash("Adding scan not succeed", 'danger')
                         return redirect(url_for('add_scan'))
                 
