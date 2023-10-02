@@ -82,7 +82,7 @@ def save_instance_image(path, sop_instance_id):
     if instance_id == '':
         return 404
     
-    instance_img = orthanc.get_instances_id_image_uint8(instance_id)
+    instance_img = orthanc.get_instances_id_image_int16(instance_id)
     instance_img = Image.open(io.BytesIO(instance_img))
     instance_img = instance_img.save(path)
 
