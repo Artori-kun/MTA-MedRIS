@@ -317,7 +317,7 @@ def add_scan():
                     try:
                         series_uid, profile_image = utils.save_picture(form.dicom_series.data)
                     except Exception as e:
-                        log_path = os.path.join(app.root_path, 'RIS/log.txt')
+                        log_path = os.path.join(app.root_path, 'log.txt')
                         with open(log_path, 'a') as fw:
                             fw.write(e+"\n")
 

@@ -66,7 +66,7 @@ def convert_dcm_jpg(path, name):
 
     final_image = Image.fromarray(final_image)
     
-    final_image.save(os.path.join(app.root_path, 'RIS/static/patients_scans/' + name + '.jpg'))
+    final_image.save(os.path.join(app.root_path, 'static/patients_scans/' + name + '.jpg'))
     print("Saved")
 
     # return final_image
@@ -107,7 +107,7 @@ def save_picture(form_pictures):
     session_uid = secrets.token_hex(10)
     
     ## create temp directory for session
-    session_path = os.path.join(app.root_path, 'RIS/static/temps/', session_uid)
+    session_path = os.path.join(app.root_path, 'static/temps/', session_uid)
     print(session_path)
     os.mkdir(session_path)
     
