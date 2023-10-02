@@ -2,7 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
-RIS/static/patients_scans/
+RIS/static/patients_scans/**
 !RIS/static/patients_scans/default.jpg
 RIS/static/temps/**
 
